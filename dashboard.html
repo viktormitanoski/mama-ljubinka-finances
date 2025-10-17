@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+<html lang="mk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Мама Љубинка - финансии</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="icon" href="images/logo.png" type="image/png">
+  <style>
+    .btn-edit {
+      background-color: #ffc107;
+      color: #000;
+      border: none;
+      padding: 0.25rem 0.5rem;
+      margin-right: 0.5rem;
+    }
+    .btn-delete {
+      background-color: #dc3545;
+      color: #fff;
+      border: none;
+      padding: 0.25rem 0.5rem;
+    }
+    .summary-card {
+      background-color: #f8f9fa;
+      border-radius: 0.5rem;
+      padding: 1rem;
+      margin-bottom: 1rem;
+    }
+    .nav-tabs .nav-link.active {
+      font-weight: bold;
+      background-color: #f8f9fa;
+      border-bottom: 1px solid #f8f9fa;
+    }
+    .cake-icon {
+      color: #4e73df;
+      margin-right: 5px;
+    }
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    .logo-img {
+      height: 60px;
+      width: auto;
+    }
+    @media (max-width: 768px) {
+      .logo-container {
+        flex-direction: column;
+        text-align: center;
+        gap: 10px;
+      }
+      .logo-img {
+        height: 50px;
+      }
+    }
+  </style>
+</head>
+<body class="bg-light">
+  <div class="container py-4">
+    <!-- Header with logo -->
+    <div class="logo-container mb-4">
+      <img src="images/logo.png" alt="Мама Љубинка Лого" class="logo-img">
+      <div>
+        <h1 class="mb-0">Мама Љубинка - финансии</h1>
+        <p class="text-muted mb-0">Систем за управување со финансии</p>
+      </div>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <div></div> <!-- Empty div for spacing -->
+      <button id="logoutBtn" class="btn btn-danger">Одјави се</button>
+    </div>
+
+    <!-- Nav Tabs -->
+    <ul class="nav nav-tabs" id="dashboardTabs" role="tablist">
+      <li class="nav-item"><button class="nav-link active" id="transactions-tab" data-bs-toggle="tab" data-bs-target="#transactions" type="button">Влез на средства</button></li>
+      <li class="nav-item"><button class="nav-link" id="employees-tab" data-bs-toggle="tab" data-bs-target="#employees" type="button">Вработени</button></li>
+      <li class="nav-item"><button class="nav-link" id="materials-tab" data-bs-toggle="tab" data-bs-target="#materials" type="button">Материјали</button></li>
+      <li class="nav-item"><button class="nav-link" id="utilities-tab" data-bs-toggle="tab" data-bs-target="#utilities" type="button">Режиски трошоци</button></li>
+    </ul>
+
+    <div class="tab-content mt-3">
+      <!-- Transactions -->
+      <div class="tab-pane fade show active" id="transactions" role="tabpanel">
+        <h3>Влез на средства</h3>
+
+        <!-- Sub-tabs -->
+        <ul class="nav nav-pills mt-3" id="transactionsSubTabs" role="tablist">
+          <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="pogon-tab" data-bs-toggle="tab" data-bs-target="#pogon" type="button" role="tab">
+              <i class="fas fa-industry cake-icon"></i>Влез-погон
+            </button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="slatkar-tab" data-bs-toggle="tab" data-bs-target="#slatkar" type="button" role="tab">
+              <i class="fas fa-store cake-icon"></i>Влез-слаткарница
+            </button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="vkupen-tab" data-bs-toggle="tab" data-bs-target="#vkupen" type="button" role="tab">
+              <i class="fas fa-chart-line cake-icon"></i>Вкупен промет
+            </button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="invoices-tab" data-bs-toggle="tab" data-bs-target="#invoices" type="button" role="tab">Излезни фактури</button>
+          </li>
+        </ul>
+
+        <div class="tab-content mt-3" id="transactionsSubTabsContent">
+          <!-- Pogon -->
+          <div class="tab-pane fade show active" id="pogon" role="tabpanel">
+            <h4>Влез-погон</h4>
+            <form id="pogonForm" class="row g-3">
+              <div class="col-md-3">
+                <label class="form-label">Име на торта</label>
+                <select id="pogonCake" class="form-select">
+                  <option value="">Избери торта</option>
+                  <option value="Торта Мама Љубинка">1. Торта "Мама Љубинка"</option>
+                  <option value="Лондонска">2. Лондонска</option>
+                  <option value="Интерконтинетал">3. Интерконтинетал</option>
+                  <option value="Грчка">4. Грчка</option>
+                  <option value="Милка">5. Милка</option>
+                  <option value="Еврејска">6. Еврејска</option>
+                  <option value="Овошна">7. Овошна</option>
+                  <option value="Чоколадна">8. Чоколадна</option>
+                  <option value="Чоколадна со вишни">9. Чоколадна со вишни</option>
+                  <option value="Киндер">10. Киндер</option>
+                  <option value="Династија">11. Династија</option>
+                  <option value="Караџорџева">12. Караџорџева</option>
+                  <option value="Касандра">13. Касандра</option>
+                  <option value="Песок торта(посна)">14. Песок торта(посна)</option>
+                  <option value="Визитарски колачи">15. Визитарски колачи</option>
+                  <option value="Пиварки">16. Пиварки</option>
+                  <option value="Чизкејк (фстак)">17. Чизкејк (фстак)</option>
+                  <option value="Чизкејк (овошен)">18. Чизкејк (овошен)</option>
+                  <option value="Тирамису">19. Тирамису</option>
+                  <option value="Трилече">20. Трилече</option>
+                  <option value="Бисквит торта">21. Бисквит торта</option>
+                  <option value="Бомбици">22. Бомбици</option>
+                </select>
+              </div>
+              <div class="col-md-2">
+                <label class="form-label">Метод на плаќање</label>
+                <select id="pogonMethod" class="form-select">
+                  <option value="">--</option>
+                  <option value="Кеш">Кеш</option>
+                  <option value="Терминал">Терминал</option>
+                </select>
+              </div>
+              <div class="col-md-2">
+                <label class="form-label">Количина</label>
+                <select id="pogonQuantity" class="form-select">
+                  <option value="">--</option>
+                  <option value="Цел шнит">Цел шнит</option>
+                  <option value="Пола шнит">Пола шнит</option>
+                  <option value="Мал шнит">Мал шнит</option>
+                </select>
+              </div>
+              <div class="col-md-2">
+                <label class="form-label">Број на парчиња</label>
+                <input id="pogonPieces" type="number" class="form-control" placeholder="бр. парчиња">
+              </div>
+              <div class="col-md-2">
+                <label class="form-label">Килограми</label>
+                <input id="pogonWeight" type="number" class="form-control" placeholder="кг">
+              </div>
+              <div class="col-md-2">
+                <label class="form-label">Вкупно (промет)</label>
+                <input id="pogonTotal" type="number" class="form-control" placeholder="Вкупно">
+              </div>
+              <div class="col-md-2">
+                <label class="form-label">Фискален промет</label>
+                <input id="pogonFisk" type="number" class="form-control" placeholder="Фискален">
+              </div>
+              <div class="col-md-2">
+                <label class="form-label">Датум</label>
+                <input id="pogonDate" type="date" class="form-control">
+              </div>
+              <div class="col-md-4 d-flex align-items-end">
+  <div class="form-check mt-3 d-flex flex-row flex-wrap gap-3">
+    <div class="form-check">
+      <input class="form-check-input" type="checkbox" id="pogonSent">
+      <label class="form-check-label" for="pogonSent">
+        Пратено во слаткарница
+      </label>
+    </div>
+    <div class="form-check">
+      <input class="form-check-input" type="checkbox" id="pogonDecoration">
+      <label class="form-check-label" for="pogonDecoration">
+        Декорација
+      </label>
+    </div>
+  </div>
+</div>
+
+<div class="col-md-2 d-flex align-items-end">
+  <button id="addPogonBtn" type="button" class="btn btn-primary w-100">Зачувај</button>
+</div>
+
+            </form>
+
+            <h5 class="mt-4">Филтер</h5>
+            <div class="row g-2 mb-3">
+              <div class="col-md-2">
+                <select id="pogonDayFilter" class="form-select">
+                  <option value="">Ден</option>
+                </select>
+              </div>
+              <div class="col-md-2">
+                <select id="pogonMonthFilter" class="form-select">
+                  <option value="">Месец</option>
+                  <option value="01">Јануари</option>
+                  <option value="02">Февруари</option>
+                  <option value="03">Март</option>
+                  <option value="04">Април</option>
+                  <option value="05">Мај</option>
+                  <option value="06">Јуни</option>
+                  <option value="07">Јули</option>
+                  <option value="08">Август</option>
+                  <option value="09">Септември</option>
+                  <option value="10">Октомври</option>
+                  <option value="11">Ноември</option>
+                  <option value="12">Декември</option>
+                </select>
+              </div>
+              <div class="col-md-2">
+                <select id="pogonYearFilter" class="form-select">
+                  <option value="">Година</option>
+                </select>
+              </div>
+              <div class="col-md-2">
+                <select id="pogonTortaFilter" class="form-select">
+                  <option value="">Сите торти</option>
+                  <option value="Торта Мама Љубинка">1. Торта "Мама Љубинка"</option>
+                  <option value="Лондонска">2. Лондонска</option>
+                  <option value="Интерконтинетал">3. Интерконтинетал</option>
+                  <option value="Грчка">4. Грчка</option>
+                  <option value="Милка">5. Милка</option>
+                  <option value="Еврејска">6. Еврејска</option>
+                  <option value="Овошна">7. Овошна</option>
+                  <option value="Чоколадна">8. Чоколадна</option>
+                  <option value="Чоколадна со вишни">9. Чоколадна со вишни</option>
+                  <option value="Киндер">10. Киндер</option>
+                  <option value="Династија">11. Династија</option>
+                  <option value="Караџорџева">12. Караџорџева</option>
+                  <option value="Касандра">13. Касандра</option>
+                  <option value="Песок торта(посна)">14. Песок торта(посна)</option>
+                  <option value="Визитарски колачи">15. Визитарски колачи</option>
+                  <option value="Пиварки">16. Пиварки</option>
+                  <option value="Чизкејк (фстак)">17. Чизкејк (фстак)</option>
+                  <option value="Чизкејк (овошен)">18. Чизкејк (овошен)</option>
+                  <option value="Тирамису">19. Тирамису</option>
+                  <option value="Трилече">20. Трилече</option>
+                  <option value="Бисквит торта">21. Бисквит торта</option>
+                  <option value="Бомбици">22. Бомбици</option>
+                </select>
+              </div>
+              <div class="col-md-2">
+                <button id="clearPogonFilters" class="btn btn-secondary">Исчисти филтери</button>
+              </div>
+            </div>
+
+            <table class="table table-striped" id="pogonTable">
+              <thead>
+                <tr>
+                  <th>Торта</th>
+                  <th>Метод</th>
+                  <th>Количина</th>
+                  <th>Парчиња</th>
+                  <th>Килограми</th>
+                  <th>Вкупно</th>
+                  <th>Фискален</th>
+                  <th>Датум</th>
+                  <th>Пратена</th>
+                  <th>Декорација</th>
+                  <th>Акции</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+            <div class="summary-card">
+              <p><strong>Вкупно:</strong> <span id="pogonTotalSum">0</span> ден.</p>
+              <p><strong>Фискален промет:</strong> <span id="pogonFiskTotal">0</span> ден.</p>
+              <p><strong>Нето:</strong> <span id="pogonNet">0</span> ден.</p>
+            </div>
+          </div>
+
+          <!-- Slatkar -->
+          <div class="tab-pane fade" id="slatkar" role="tabpanel">
+            <h4>Влез-слаткарница</h4>
+            <form id="slatkarForm" class="row g-3">
+              <div class="col-md-3">
+                <label class="form-label">Метод на плаќање</label>
+                <select id="slatkarMethod" class="form-select">
+                  <option value="Кеш">Кеш</option>
+                  <option value="Терминал">Терминал</option>
+                </select>
+              </div>
+              <div class="col-md-3">
+                <label class="form-label">Вкупно (промет)</label>
+                <input id="slatkarTotal" type="number" class="form-control" placeholder="Вкупно">
+              </div>
+              <div class="col-md-3">
+                <label class="form-label">Фискален промет</label>
+                <input id="slatkarFisk" type="number" class="form-control" placeholder="Фискален">
+              </div>
+              <div class="col-md-3">
+                <label class="form-label">Датум</label>
+                <input id="slatkarDate" type="date" class="form-control">
+              </div>
+              <div class="col-12">
+                <button id="addSlatkarBtn" type="button" class="btn btn-primary">Зачувај</button>
+              </div>
+            </form>
+
+            <h5 class="mt-4">Филтер</h5>
+            <div class="row g-2 mb-3">
+              <div class="col-md-2">
+                <select id="slatkarDayFilter" class="form-select">
+                  <option value="">Ден</option>
+                </select>
+              </div>
+              <div class="col-md-2">
+                <select id="slatkarMonthFilter" class="form-select">
+                  <option value="">Месец</option>
+                  <option value="01">Јануари</option>
+                  <option value="02">Февруари</option>
+                  <option value="03">Март</option>
+                  <option value="04">Април</option>
+                  <option value="05">Мај</option>
+                  <option value="06">Јуни</option>
+                  <option value="07">Јули</option>
+                  <option value="08">Август</option>
+                  <option value="09">Септември</option>
+                  <option value="10">Октомври</option>
+                  <option value="11">Ноември</option>
+                  <option value="12">Декември</option>
+                </select>
+              </div>
+              <div class="col-md-2">
+                <select id="slatkarYearFilter" class="form-select">
+                  <option value="">Година</option>
+                </select>
+              </div>
+              <div class="col-md-2">
+                <select id="slatkarMethodFilter" class="form-select">
+                  <option value="">Сите методи</option>
+                  <option value="Кеш">Кеш</option>
+                  <option value="Терминал">Терминал</option>
+                </select>
+              </div>
+              <div class="col-md-2">
+                <button id="clearSlatkarFilters" class="btn btn-secondary">Исчисти филтери</button>
+              </div>
+            </div>
+
+            <table class="table table-striped" id="slatkarTable">
+              <thead>
+                <tr>
+                  <th>Метод</th>
+                  <th>Вкупно</th>
+                  <th>Фискален</th>
+                  <th>Датум</th>
+                  <th>Акции</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+            <div class="summary-card">
+              <p><strong>Вкупно:</strong> <span id="slatkarTotalSum">0</span> ден.</p>
+              <p><strong>Фискален промет:</strong> <span id="slatkarFiskTotal">0</span> ден.</p>
+              <p><strong>Нето:</strong> <span id="slatkarNet">0</span> ден.</p>
+            </div>
+          </div>
+
+          <!-- Vkupen Promet -->
+          <div class="tab-pane fade" id="vkupen" role="tabpanel">
+            <h4>Вкупен промет</h4>
+            
+            <h5 class="mt-4">Филтер</h5>
+            <div class="row g-2 mb-3">
+              <div class="col-md-2">
+                <select id="vkupenDayFilter" class="form-select">
+                  <option value="">Ден</option>
+                </select>
+              </div>
+              <div class="col-md-2">
+                <select id="vkupenMonthFilter" class="form-select">
+                  <option value="">Месец</option>
+                  <option value="01">Јануари</option>
+                  <option value="02">Февруари</option>
+                  <option value="03">Март</option>
+                  <option value="04">Април</option>
+                  <option value="05">Мај</option>
+                  <option value="06">Јуни</option>
+                  <option value="07">Јули</option>
+                  <option value="08">Август</option>
+                  <option value="09">Септември</option>
+                  <option value="10">Октомври</option>
+                  <option value="11">Ноември</option>
+                  <option value="12">Декември</option>
+                </select>
+              </div>
+              <div class="col-md-2">
+                <select id="vkupenYearFilter" class="form-select">
+                  <option value="">Година</option>
+                </select>
+              </div>
+              <div class="col-md-2">
+                <select id="vkupenSourceFilter" class="form-select">
+                  <option value="">Сите извори</option>
+                  <option value="Погон">Погон</option>
+                  <option value="Слаткарница">Слаткарница</option>
+                  <option value="Излезни фактури">Излезни фактури</option>
+                </select>
+              </div>
+              <div class="col-md-2">
+                <select id="vkupenMethodFilter" class="form-select">
+                  <option value="">Сите методи</option>
+                  <option value="Кеш">Кеш</option>
+                  <option value="Терминал">Терминал</option>
+                </select>
+              </div>
+              <div class="col-md-2">
+                <button id="clearVkupenFilters" class="btn btn-secondary">Исчисти филтери</button>
+              </div>
+            </div>
+
+            <table class="table table-striped" id="vkupenTable">
+              <thead>
+                <tr>
+                  <th>Датум</th>
+                  <th>Извор</th>
+                  <th>Метод на плаќање</th>
+                  <th>Вкупно</th>
+                  <th>Фискален</th>
+                  <th>Нето</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+            <div class="summary-card">
+              <p><strong>Вкупно промет:</strong> <span id="vkupenTotalSum">0</span> ден.</p>
+              <p><strong>Вкупно фискален промет:</strong> <span id="vkupenFiskTotal">0</span> ден.</p>
+              <p><strong>Вкупно нето:</strong> <span id="vkupenNet">0</span> ден.</p>
+            </div>
+          </div>
+
+          <!-- Invoices -->
+          <div class="tab-pane fade" id="invoices" role="tabpanel">
+            <h4>Излезни фактури</h4>
+            
+            <!-- Sub-tabs for Companies & Invoices -->
+            <ul class="nav nav-pills mb-3" id="invSubTabs">
+              <li class="nav-item"><button class="nav-link active" data-bs-toggle="pill" data-bs-target="#companies">Додај компанија</button></li>
+              <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#invoices-content">Фактури</button></li>
+            </ul>
+
+            <div class="tab-content">
+              <!-- Companies -->
+              <div class="tab-pane fade show active" id="companies">
+                <form id="companyForm" class="row g-3">
+                  <div class="col-md-6">
+                    <label class="form-label">Име на компанија</label>
+                    <input id="companyName" type="text" class="form-control" placeholder="Име на компанија">
+                  </div>
+                  <div class="col-md-6 d-flex align-items-end">
+                    <button id="addCompanyBtn" type="button" class="btn btn-primary">Зачувај</button>
+                  </div>
+                </form>
+
+                <h5 class="mt-4">Компании</h5>
+                <table class="table table-striped" id="companiesTable">
+                  <thead><tr><th>Име</th><th>Акции</th></tr></thead>
+                  <tbody></tbody>
+                </table>
+              </div>
+
+              <!-- Invoices Content -->
+              <div class="tab-pane fade" id="invoices-content">
+                <form id="invoiceForm" class="row g-3">
+                  <div class="col-md-3">
+                    <label class="form-label">Компанија</label>
+                    <select id="invoiceCompany" class="form-select"></select>
+                  </div>
+                  <div class="col-md-3">
+                    <label class="form-label">Артикал</label>
+                    <input id="invoiceArticle" type="text" class="form-control" placeholder="Артикал">
+                  </div>
+                  <div class="col-md-2">
+                    <label class="form-label">Количина</label>
+                    <input id="invoiceQuantity" type="number" class="form-control" placeholder="Количина">
+                  </div>
+                  <div class="col-md-2">
+                    <label class="form-label">Тежина (kg)</label>
+                    <input id="invoiceWeight" type="number" class="form-control" placeholder="Тежина">
+                  </div>
+                  <div class="col-md-2">
+                    <label class="form-label">Вкупно</label>
+                    <input id="invoiceTotal" type="number" class="form-control" placeholder="Вкупно">
+                  </div>
+                  <div class="col-md-2">
+                    <label class="form-label">Датум</label>
+                    <input id="invoiceDate" type="date" class="form-control">
+                  </div>
+                  <div class="col-12">
+                    <button id="addInvoiceBtnVlez" type="button" class="btn btn-primary">Зачувај</button>
+                  </div>
+                </form>
+
+                <h5 class="mt-4">Фактури</h5>
+                
+                <div class="row g-2 mb-2">
+                  <div class="col-md-2">
+                    <select id="invDayFilter" class="form-select">
+                      <option value="">Ден</option>
+                    </select>
+                  </div>
+                  <div class="col-md-2">
+                    <select id="invMonthFilter" class="form-select">
+                      <option value="">Месец</option>
+                      <option value="01">Јануари</option>
+                      <option value="02">Февруари</option>
+                      <option value="03">Март</option>
+                      <option value="04">Април</option>
+                      <option value="05">Мај</option>
+                      <option value="06">Јуни</option>
+                      <option value="07">Јули</option>
+                      <option value="08">Август</option>
+                      <option value="09">Септември</option>
+                      <option value="10">Октомври</option>
+                      <option value="11">Ноември</option>
+                      <option value="12">Декември</option>
+                    </select>
+                  </div>
+                  <div class="col-md-2">
+                    <select id="invYearFilter" class="form-select">
+                      <option value="">Година</option>
+                    </select>
+                  </div>
+                  <div class="col-md-3">
+                    <select id="invCompanyFilter" class="form-select">
+                      <option value="">Сите компании</option>
+                    </select>
+                  </div>
+                  <div class="col-md-3">
+                    <button id="clearInvoiceFilters" class="btn btn-secondary">Ресетирај филтери</button>
+                  </div>
+                </div>
+
+                <table class="table table-striped" id="invoicesTable">
+                  <thead>
+                    <tr>
+                      <th>Компанија</th>
+                      <th>Артикал</th>
+                      <th>Количина</th>
+                      <th>Тежина</th>
+                      <th>Вкупно</th>
+                      <th>Датум</th>
+                      <th>Акции</th>
+                    </tr>
+                  </thead>
+                  <tbody></tbody>
+                </table>
+                
+                <div class="summary-card">
+                  <p><strong>Вкупно:</strong> <span id="invTotal">0</span> ден.</p>
+                  <p><strong>Фискален промет:</strong> <span id="invFiskalenTotal">0</span> ден.</p>
+                  <p><strong>Нето:</strong> <span id="invNet">0</span> ден.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Employees -->
+      <div class="tab-pane fade" id="employees" role="tabpanel">
+        <h3>Вработени</h3>
+
+        <!-- Sub-tabs -->
+        <ul class="nav nav-pills mb-3" id="empSubTabs">
+          <li class="nav-item"><button class="nav-link active" data-bs-toggle="pill" data-bs-target="#emp-manage">Листа</button></li>
+          <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#emp-hours">Работни часови</button></li>
+        </ul>
+
+        <div class="tab-content">
+          <!-- Employees List -->
+          <div class="tab-pane fade show active" id="emp-manage">
+            <form class="row g-3">
+              <div class="col-md-3">
+                <label class="form-label">Тип</label>
+                <select id="empType" class="form-select">
+                  <option value="contract">Вработен на договор</option>
+                  <option value="daily">Дневно платен работник</option>
+                </select>
+              </div>
+              <div class="col-md-3">
+                <label class="form-label">Име</label>
+                <input id="empName" type="text" class="form-control">
+              </div>
+              <div class="col-md-3">
+                <label class="form-label">Плата</label>
+                <input id="empSalary" type="number" class="form-control">
+              </div>
+              <div class="col-md-3">
+                <label class="form-label">Датум</label>
+                <input id="empDate" type="date" class="form-control">
+              </div>
+              <div class="col-12">
+                <button id="addEmployeeBtn" type="button" class="btn btn-primary">Зачувај</button>
+              </div>
+            </form>
+            
+            <div class="row mt-4">
+              <div class="col-md-6">
+                <h4>Вработени на договор</h4>
+                <table class="table table-striped" id="employeesTable">
+                  <thead>
+                    <tr>
+                      <th>Име</th>
+                      <th>Плата</th>
+                      <th>Датум на започнување</th>
+                      <th>Акции</th>
+                    </tr>
+                  </thead>
+                  <tbody></tbody>
+                </table>
+              </div>
+              <div class="col-md-6">
+                <h4>Дневно платени работници</h4>
+                <table class="table table-striped" id="dailyTable">
+                  <thead>
+                    <tr>
+                      <th>Име</th>
+                      <th>Плата</th>
+                      <th>Датум на започнување</th>
+                      <th>Акции</th>
+                    </tr>
+                  </thead>
+                  <tbody></tbody>
+                </table>
+              </div>
+            </div>
+            
+            <div class="mt-3">
+              <h5>Филтер & Статистика</h5>
+              <div class="row g-2 mb-2">
+                <div class="col-md-3">
+                  <input type="month" id="empMonthFilter" class="form-control" placeholder="Месец">
+                </div>
+                <div class="col-md-3">
+                  <select id="empTypeFilter" class="form-select">
+                    <option value="">Сите типови</option>
+                    <option value="contract">Вработени на договор</option>
+                    <option value="daily">Дневно платени</option>
+                  </select>
+                </div>
+                <div class="col-md-3">
+                  <select id="empNameFilter" class="form-select">
+                    <option value="">Сите вработени</option>
+                  </select>
+                </div>
+                <div class="col-md-3">
+                  <button id="clearEmpFilters" class="btn btn-secondary">Ресетирај филтери</button>
+                </div>
+              </div>
+              <div class="summary-card">
+                <p><strong>Вкупно плати:</strong> <span id="empTotal">0</span></p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Work Hours -->
+          <div class="tab-pane fade" id="emp-hours">
+            <h4>Работни часови</h4>
+            <form class="row g-3">
+              <div class="col-md-4">
+                <label class="form-label">Вработен</label>
+                <select id="workEmpName" class="form-select"></select>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">Датум</label>
+                <input id="workDate" type="date" class="form-control">
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">Часови</label>
+                <input id="workHours" type="number" class="form-control">
+              </div>
+              <div class="col-12">
+                <button id="addWorkHourBtn" type="button" class="btn btn-primary">Зачувај</button>
+              </div>
+            </form>
+            
+            <h5 class="mt-4">Филтер & Статистика</h5>
+            <div class="row g-2 mb-2">
+              <div class="col-md-2">
+                <select id="workDayFilter" class="form-select">
+                  <option value="">Ден</option>
+                </select>
+              </div>
+              <div class="col-md-2">
+                <select id="workMonthFilter" class="form-select">
+                  <option value="">Месец</option>
+                  <option value="01">Јануари</option>
+                  <option value="02">Февруари</option>
+                  <option value="03">Март</option>
+                  <option value="04">Април</option>
+                  <option value="05">Мај</option>
+                  <option value="06">Јуни</option>
+                  <option value="07">Јули</option>
+                  <option value="08">Август</option>
+                  <option value="09">Септември</option>
+                  <option value="10">Октомври</option>
+                  <option value="11">Ноември</option>
+                  <option value="12">Декември</option>
+                </select>
+              </div>
+              <div class="col-md-2">
+                <select id="workYearFilter" class="form-select">
+                  <option value="">Година</option>
+                </select>
+              </div>
+              <div class="col-md-3">
+                <select id="workNameFilter" class="form-select">
+                  <option value="">Сите вработени</option>
+                </select>
+              </div>
+              <div class="col-md-3">
+                <button id="clearWorkFilters" class="btn btn-secondary">Ресетирај филтери</button>
+              </div>
+            </div>
+            
+            <table class="table table-striped mt-3" id="workHoursTable">
+              <thead>
+                <tr>
+                  <th>Вработен</th>
+                  <th>Датум</th>
+                  <th>Часови</th>
+                  <th>Акции</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+            
+            <div class="summary-card">
+              <p><strong>Вкупно часови:</strong> <span id="workTotal">0</span></p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Materials -->
+      <div class="tab-pane fade" id="materials" role="tabpanel">
+        <h3>Материјали за работа</h3>
+
+        <h5>На фактура:</h5>
+        <form class="row g-3">
+          <div class="col-md-3">
+            <label class="form-label">Добавувач</label>
+            <select id="matVendor" class="form-select">
+              <option value="">Избери добавувач</option>
+              <option>Agroma</option>
+              <option>AM (Tamaro)</option>
+              <option>Gen Prom</option>
+              <option>Hemi Papir</option>
+              <option>Dauti</option>
+              <option>Lita</option>
+              <option>ZZ Gorica</option>
+            </select>
+          </div>
+          <div class="col-md-3">
+            <label class="form-label">Артикал</label>
+            <input id="matInvoiceName" type="text" class="form-control" placeholder="Име на артикал">
+          </div>
+          <div class="col-md-2">
+            <label class="form-label">Количина</label>
+            <input id="matInvoiceQuantity" type="number" class="form-control" placeholder="Количина">
+          </div>
+          <div class="col-md-2">
+            <label class="form-label">Тежина (kg)</label>
+            <input id="matInvoiceWeight" type="number" class="form-control" placeholder="Тежина">
+          </div>
+          <div class="col-md-2">
+            <label class="form-label">Вкупно</label>
+            <input id="matInvoiceAmount" type="number" class="form-control" placeholder="Вкупно">
+          </div>
+          <div class="col-md-3">
+            <label class="form-label">Датум</label>
+            <input id="matInvoiceDate" type="date" class="form-control">
+          </div>
+          <div class="col-12">
+            <button id="addMaterialInvoiceBtn" type="button" class="btn btn-primary">Зачувај</button>
+          </div>
+        </form>
+
+        <h5 class="mt-4">Купено во кеш:</h5>
+        <form class="row g-3">
+          <div class="col-md-3">
+            <label class="form-label">Артикал</label>
+            <input id="cashItem" type="text" class="form-control" placeholder="Артикал">
+          </div>
+          <div class="col-md-2">
+            <label class="form-label">Добавувач</label>
+            <input id="cashVendor" type="text" class="form-control" placeholder="Добавувач">
+          </div>
+          <div class="col-md-2">
+            <label class="form-label">Количина</label>
+            <input id="cashQuantity" type="number" class="form-control" placeholder="Количина">
+          </div>
+          <div class="col-md-2">
+            <label class="form-label">Тежина (kg)</label>
+            <input id="cashWeight" type="number" class="form-control" placeholder="Тежина">
+          </div>
+          <div class="col-md-2">
+            <label class="form-label">Вкупно</label>
+            <input id="cashAmount" type="number" class="form-control" placeholder="Вкупно">
+          </div>
+          <div class="col-md-3">
+            <label class="form-label">Датум</label>
+            <input id="cashDate" type="date" class="form-control">
+          </div>
+          <div class="col-12">
+            <button id="addCashBtn" type="button" class="btn btn-primary">Зачувај</button>
+          </div>
+        </form>
+
+        <h5 class="mt-4">Филтер & Статистика</h5>
+        <div class="row g-2 mb-2">
+          <div class="col-md-2">
+            <select id="matDayFilter" class="form-select">
+              <option value="">Ден</option>
+            </select>
+          </div>
+          <div class="col-md-2">
+            <select id="matMonthFilter" class="form-select">
+              <option value="">Месец</option>
+              <option value="01">Јануари</option>
+              <option value="02">Февруари</option>
+              <option value="03">Март</option>
+              <option value="04">Април</option>
+              <option value="05">Мај</option>
+              <option value="06">Јуни</option>
+              <option value="07">Јули</option>
+              <option value="08">Август</option>
+              <option value="09">Септември</option>
+              <option value="10">Октомври</option>
+              <option value="11">Ноември</option>
+              <option value="12">Декември</option>
+            </select>
+          </div>
+          <div class="col-md-2">
+            <select id="matYearFilter" class="form-select">
+              <option value="">Година</option>
+            </select>
+          </div>
+          <div class="col-md-2">
+            <select id="matTypeFilter" class="form-select">
+              <option value="">Сите методи</option>
+              <option value="invoice">Фактура</option>
+              <option value="cash">Кеш</option>
+            </select>
+          </div>
+          <div class="col-md-2">
+            <select id="matVendorFilter" class="form-select">
+              <option value="">Сите добавувачи</option>
+            </select>
+          </div>
+          <div class="col-md-2">
+            <button id="clearMatFilters" class="btn btn-secondary">Ресетирај филтери</button>
+          </div>
+        </div>
+
+        <table class="table table-striped mt-3" id="materialsTable">
+          <thead>
+            <tr>
+              <th>Метод</th>
+              <th>Артикал</th>
+              <th>Добавувач</th>
+              <th>Количина</th>
+              <th>Тежина (kg)</th>
+              <th>Износ</th>
+              <th>Датум</th>
+              <th>Акции</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+        
+        <div class="summary-card">
+          <p><strong>Вкупно трошоци за материјали:</strong> <span id="matTotal">0</span> ден.</p>
+        </div>
+      </div>
+
+      <!-- Utilities -->
+      <div class="tab-pane fade" id="utilities" role="tabpanel">
+        <h3>Режиски трошоци</h3>
+        <form class="row g-3">
+          <div class="col-md-4">
+            <label class="form-label">Тип</label>
+            <select id="utilityType" class="form-select">
+              <option>Електрична енергија погон</option>
+              <option>Електрична енергија слаткара</option>
+              <option>Кирија погон</option>
+              <option>Кирија слаткара</option>
+              <option>Водовод-погон</option>
+              <option>Колектор-погон</option>
+              <option>Комуналец-погон</option>
+              <option>Нискоградба-погон</option>
+              <option>Водовод-слаткара</option>
+              <option>Колектор-слаткара</option>
+              <option>Комуналец-слаткара</option>
+              <option>Нискоградба-слаткара</option>
+              <option>Кирија магацин</option>
+              <option>Струја магацин</option>
+              <option>Бензин</option>
+            </select>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">Вкупно</label>
+            <input id="utilityAmount" type="number" class="form-control" placeholder="Вкупно">
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">Датум</label>
+            <input id="utilityDate" type="date" class="form-control">
+          </div>
+          <div class="col-12">
+            <button id="addUtilityBtn" type="button" class="btn btn-primary">Зачувај</button>
+          </div>
+        </form>
+
+        <h5 class="mt-4">Филтер & Статистика</h5>
+        <div class="row g-2 mb-2">
+          <div class="col-md-2">
+            <select id="utilDayFilter" class="form-select">
+              <option value="">Ден</option>
+            </select>
+          </div>
+          <div class="col-md-2">
+            <select id="utilMonthFilter" class="form-select">
+              <option value="">Месец</option>
+              <option value="01">Јануари</option>
+              <option value="02">Февруари</option>
+              <option value="03">Март</option>
+              <option value="04">Април</option>
+              <option value="05">Мај</option>
+              <option value="06">Јуни</option>
+              <option value="07">Јули</option>
+              <option value="08">Август</option>
+              <option value="09">Септември</option>
+              <option value="10">Октомври</option>
+              <option value="11">Ноември</option>
+              <option value="12">Декември</option>
+            </select>
+          </div>
+          <div class="col-md-2">
+            <select id="utilYearFilter" class="form-select">
+              <option value="">Година</option>
+            </select>
+          </div>
+          <div class="col-md-3">
+            <select id="utilTypeFilter" class="form-select">
+              <option value="">Сите типови</option>
+              <option value="Електрична енергија погон">Електрична енергија погон</option>
+              <option value="Електрична енергија слаткара">Електрична енергија слаткара</option>
+              <option value="Кирија погон">Кирија погон</option>
+              <option value="Кирија слаткара">Кирија слаткара</option>
+              <option value="Кирија магацин">Кирија магацин</option>
+              <option value="Кирија магацин">Водовод-погон</option>
+              <option value="Колектор-погон">Колектор-погон</option>
+              <option value="Комуналец-погон">Комуналец-погон</option>
+              <option value="Нискоградба-погон">Нискоградба-погон</option>
+              <option value="Водовод-слаткара">Водовод-слаткара</option>
+              <option value="Колектор-слаткара">Колектор-слаткара</option>
+              <option value="Комуналец-слаткара">Комуналец-слаткара</option>
+              <option value="Нискоградба-слаткара">Нискоградба-слаткара</option>
+            </select>
+          </div>
+          <div class="col-md-3">
+            <button id="clearUtilFilters" class="btn btn-secondary">Ресетирај филтери</button>
+          </div>
+        </div>
+
+        <table class="table table-striped mt-3" id="utilitiesTable">
+          <thead>
+            <tr>
+              <th>Тип</th>
+              <th>Вкупно</th>
+              <th>Датум</th>
+              <th>Акции</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+        
+        <div class="summary-card">
+          <p><strong>Вкупно режиски трошоци:</strong> <span id="utilTotal">0</span> ден.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script type="module" src="js/firebase-config.js"></script>
+<script type="module" src="js/dashboard-auth.js"></script>
+<script type="module" src="js/employees.js"></script>
+<script type="module" src="js/materials.js"></script>
+<script type="module" src="js/utilities.js"></script>
+<script type="module" src="js/transactions.js"></script>
+<script type="module" src="js/invoices.js"></script>
+<script type="module" src="js/table-pagination.js"></script>
+</body>
+</html>
