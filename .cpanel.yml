@@ -2,9 +2,10 @@
 deployment:
   tasks:
     - export DEPLOYPATH=/home2/totomk/public_html/mamaljubinkafinances.toto.mk/
-    - /bin/rsync -av --delete \
+    - if command -v rsync >/dev/null 2>&1; then RSYNC=$(command -v rsync); else RSYNC=/usr/bin/rsync; fi
+    - $RSYNC -av --delete \
         --exclude ".git" \
-        --exclude ".cpanel" \
         --exclude ".github" \
-        --exclude "node_modules" \
+        --exclude ".cpanel" \
+        --exclude ".well-known/" \
         ./ $DEPLOYPATH
