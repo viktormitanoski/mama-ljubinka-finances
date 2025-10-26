@@ -2,15 +2,15 @@ name: Build to deploy branch
 
 on:
   push:
-    branches: [ "main" ]   # Trigger when you push to main
+    branches: [ "main" ]
 
 permissions:
-  contents: write          # Needed to push to the repo
+  contents: write
 
 jobs:
   build-and-push-deploy:
     runs-on: ubuntu-latest
-    environment: prod   # Uses your “production” environment secrets
+    environment: prod
 
     steps:
       - name: Checkout main
@@ -38,22 +38,22 @@ jobs:
           export const auth = getAuth(app);
           EOF
 
-      - name: Prepare deploy tree (copy repo contents)
+      - name: Prepare deploy tree (copy repo contents safely)
         run: |
           rm -rf deploy
           mkdir deploy
-          shopt -s dotglob
-          cp -R * deploy/
-          # Optional: don’t ship CI configs to the server
-          rm -rf deploy/.github
+          rsync -a ./ deploy/ \
+            --exclude "deploy" \
+            --exclude ".git" \
+            --exclude ".github"  # optional: don't ship CI files
 
       - name: Push to deploy branch (same repo)
+        working-directory: deploy
         env:
           REPO: ${{ github.repository }}
           TOKEN: ${{ github.token }}
           ACTOR: ${{ github.actor }}
         run: |
-          cd deploy
           git init
           git config user.name "${ACTOR}"
           git config user.email "${ACTOR}@users.noreply.github.com"
