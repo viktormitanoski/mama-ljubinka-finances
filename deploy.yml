@@ -1,0 +1,5 @@
+---
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home2/totomk/public_html/mamaljubinkafinances.toto.mk
+    - /bin/bash .cpanel-deploy.sh
