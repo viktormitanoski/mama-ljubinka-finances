@@ -1,5 +1,16 @@
 ---
 deployment:
   tasks:
-    - export DEPLOYPATH=/home2/totomk/public_html/mamaljubinkafinances.toto.mk
-    - /bin/bash .cpanel-deploy.sh
+    - export DEPLOY_LOG="/home2/totomk/deployments/mamaljubinka_$(date +'%Y-%m-%d_%H-%M-%S').log"
+    - mkdir -p /home2/totomk/deployments
+    - echo "🚀 Starting deployment at $(date)" | tee -a "$DEPLOY_LOG"
+
+    # run the main deploy script
+    - bash /home2/totomk/.cpanel-deploy.sh | tee -a "$DEPLOY_LOG"
+
+    - if [ ! -f /home2/totomk/public_html/mamaljubinkafinances.toto.mk/js/firebase-config.js ]; then
+        echo "❌ firebase-config.js not found! Rolling back..." | tee -a "$DEPLOY_LOG";
+        exit 1;
+      fi
+
+    - echo "Deployment finished successfully at $(date)" | tee -a "$DEPLOY_LOG"
