@@ -73,6 +73,183 @@ const pogonRef = collection(db, "pogon_transactions");
 const slatkarRef = collection(db, "slatkar_transactions");
 const invoicesRef = collection(db, "invoices");
 
+// ================== Cake Management ==================
+
+// DOM elements for Cake Management
+const manageCakesBtn = document.getElementById("manageCakesBtn");
+const cakesModal = new bootstrap.Modal(document.getElementById('cakesModal'));
+const newCakeNameInput = document.getElementById("newCakeName");
+const addCakeBtn = document.getElementById("addCakeBtn");
+const cakesTableBody = document.getElementById("cakesTableBody");
+
+// Firestore collection for cakes
+const cakesRef = collection(db, "cakes");
+
+// State
+let cakes = [];
+let editCakeId = null;
+
+// Load cakes from Firestore and populate dropdown
+function loadCakes() {
+    onSnapshot(cakesRef, (snapshot) => {
+        cakes = snapshot.docs.map(doc => ({ 
+            id: doc.id, 
+            ...doc.data()
+        }));
+        
+        // Sort cakes by order field (if exists) or by creation date
+        cakes.sort((a, b) => {
+            if (a.order !== undefined && b.order !== undefined) {
+                return a.order - b.order;
+            }
+            // For existing cakes without order field, use createdAt
+            const dateA = a.createdAt ? (a.createdAt.toDate ? a.createdAt.toDate() : new Date(a.createdAt)) : new Date(0);
+            const dateB = b.createdAt ? (b.createdAt.toDate ? b.createdAt.toDate() : new Date(b.createdAt)) : new Date(0);
+            return dateA - dateB;
+        });
+        
+        populateCakeDropdown();
+        populateCakeFilter(); // Add this line
+        renderCakesTable();
+    });
+}
+
+// Populate cake dropdown with numbered options
+function populateCakeDropdown() {
+    pogonCakeInput.innerHTML = '<option value="">Избери торта</option>';
+    
+    cakes.forEach((cake, index) => {
+        const option = document.createElement('option');
+        option.value = cake.name;
+        option.textContent = `${index + 1}. ${cake.name}`;
+        pogonCakeInput.appendChild(option);
+    });
+}
+
+// Render cakes table in modal with numbering
+function renderCakesTable() {
+    cakesTableBody.innerHTML = '';
+    
+    cakes.forEach((cake, index) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td>${index + 1}</td>
+            <td>${cake.name}</td>
+            <td>
+                <button class="btn btn-sm btn-warning edit-cake" data-id="${cake.id}">
+                    Измени
+                </button>
+                <button class="btn btn-sm btn-danger delete-cake" data-id="${cake.id}">
+                    Избриши
+                </button>
+            </td>
+        `;
+        cakesTableBody.appendChild(tr);
+    });
+}
+
+// Get the next order number for new cakes
+function getNextOrderNumber() {
+    if (cakes.length === 0) return 1;
+    
+    // Find the highest order number
+    const maxOrder = Math.max(...cakes.map(cake => cake.order || 0));
+    return maxOrder + 1;
+}
+
+// Add new cake
+addCakeBtn.addEventListener("click", async () => {
+    const cakeName = newCakeNameInput.value.trim();
+    
+    if (!cakeName) {
+        alert("Внесете име на тортата!");
+        return;
+    }
+    
+    // Check if cake already exists
+    const existingCake = cakes.find(cake => 
+        cake.name.toLowerCase() === cakeName.toLowerCase()
+    );
+    
+    if (existingCake) {
+        alert("Торта со ова име веќе постои!");
+        return;
+    }
+    
+    try {
+        if (editCakeId) {
+            // Update existing cake
+            await updateDoc(doc(db, "cakes", editCakeId), { 
+                name: cakeName 
+            });
+            editCakeId = null;
+            addCakeBtn.textContent = "Додај";
+        } else {
+            // Add new cake with order number
+            const nextOrder = getNextOrderNumber();
+            await addDoc(cakesRef, { 
+                name: cakeName,
+                order: nextOrder,
+                createdAt: new Date()
+            });
+        }
+        
+        newCakeNameInput.value = "";
+    } catch (error) {
+        console.error("Error saving cake: ", error);
+        alert("Грешка при зачувување на торта: " + error.message);
+    }
+});
+
+// Cakes table event delegation
+cakesTableBody.addEventListener("click", async (e) => {
+    if (e.target.classList.contains("edit-cake")) {
+        const cakeId = e.target.dataset.id;
+        const cake = cakes.find(c => c.id === cakeId);
+        
+        if (cake) {
+            newCakeNameInput.value = cake.name;
+            editCakeId = cakeId;
+            addCakeBtn.textContent = "Ажурирај";
+            newCakeNameInput.focus();
+        }
+    }
+    
+    if (e.target.classList.contains("delete-cake")) {
+        const cakeId = e.target.dataset.id;
+        const cake = cakes.find(c => c.id === cakeId);
+        
+        if (cake && confirm(`Дали сте сигурни дека сакате да ја избришете тортата "${cake.name}"?`)) {
+            try {
+                await deleteDoc(doc(db, "cakes", cakeId));
+                // After deletion, we don't need to renumber because we use explicit order numbers
+            } catch (error) {
+                console.error("Error deleting cake: ", error);
+                alert("Грешка при бришење на торта: " + error.message);
+            }
+        }
+    }
+});
+
+// Open cakes management modal
+manageCakesBtn.addEventListener("click", () => {
+    // Reset form when opening modal
+    newCakeNameInput.value = "";
+    editCakeId = null;
+    addCakeBtn.textContent = "Додај";
+    cakesModal.show();
+});
+
+// Add cake on Enter key
+newCakeNameInput.addEventListener("keypress", (e) => {
+    if (e.key === "Enter") {
+        addCakeBtn.click();
+    }
+});
+
+// Initialize cakes management
+loadCakes();
+
 // ================== Pogon Transactions ==================
 
 // Add Pogon transaction
@@ -513,7 +690,7 @@ vkupenYearFilter.addEventListener("change", renderVkupenPromet);
 vkupenSourceFilter.addEventListener("change", renderVkupenPromet);
 vkupenMethodFilter.addEventListener("change", renderVkupenPromet);
 
-// Clear filter events
+// clear pogon filters
 clearPogonFilters.addEventListener("click", () => {
   pogonDayFilter.value = "";
   pogonMonthFilter.value = "";
@@ -544,3 +721,15 @@ clearVkupenFilters.addEventListener("click", () => {
 const today = new Date().toISOString().split('T')[0];
 document.getElementById('pogonDate').value = today;
 document.getElementById('slatkarDate').value = today;
+
+// Populate cake filter dropdown
+function populateCakeFilter() {
+    pogonTortaFilter.innerHTML = '<option value="">Сите торти</option>';
+    
+    cakes.forEach((cake, index) => {
+        const option = document.createElement('option');
+        option.value = cake.name;
+        option.textContent = `${index + 1}. ${cake.name}`;
+        pogonTortaFilter.appendChild(option);
+    });
+}

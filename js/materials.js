@@ -6,6 +6,7 @@ import {
   deleteDoc,
   doc,
   updateDoc,
+  getDocs
 } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
 
 /* ---------------- References ---------------- */
@@ -43,6 +44,7 @@ const matTotalEl = document.getElementById("matTotal");
 
 let matEditId = null;
 let materials = [];
+let vendors = [];
 
 /* ---------------- Render ---------------- */
 function renderMaterials() {
@@ -94,17 +96,16 @@ function renderMaterials() {
 
   matTotalEl.textContent = total;
 
-  // Populate vendor filter
-  const vendors = [...new Set(materials.map(item => item.vendor).filter(v => v))];
+  // Populate vendor filter from vendors collection (maintain order)
   matVendorFilter.innerHTML = '<option value="">Сите добавувачи</option>';
-  vendors.forEach(vendor => {
-    if (vendor && ![...matVendorFilter.options].some(o => o.value === vendor)) {
-      const option = document.createElement("option");
-      option.value = vendor;
-      option.textContent = vendor;
-      matVendorFilter.appendChild(option);
-    }
-  });
+  if (vendors && vendors.length > 0) {
+      vendors.forEach(vendor => {
+          const option = document.createElement("option");
+          option.value = vendor.name;
+          option.textContent = vendor.name;
+          matVendorFilter.appendChild(option);
+      });
+  }
 }
 
 /* ---------------- Add / Update ---------------- */
@@ -315,3 +316,198 @@ for (let year = currentYear - 5; year <= currentYear; year++) {
 // At the end of materials.js
 invoiceDateInput.valueAsDate = new Date();
 cashDateInput.valueAsDate = new Date();
+
+
+// ================== Vendor Management ==================
+
+// ================== Vendor Management ==================
+
+// DOM elements for Vendor Management
+const manageVendorsBtn = document.getElementById("manageVendorsBtn");
+const vendorsModalElement = document.getElementById('vendorsModal');
+const newVendorNameInput = document.getElementById("newVendorName");
+const addVendorBtn = document.getElementById("addVendorBtn");
+const vendorsTableBody = document.getElementById("vendorsTableBody");
+
+// Only initialize vendor management if the elements exist
+if (manageVendorsBtn && vendorsModalElement && newVendorNameInput && addVendorBtn && vendorsTableBody) {
+    const vendorsModal = new bootstrap.Modal(vendorsModalElement);
+    
+    // Firestore collection for vendors
+    const vendorsRef = collection(db, "vendors");
+
+    // State
+    let editVendorId = null;
+
+    // Load vendors from Firestore and populate dropdown
+    function loadVendors() {
+        onSnapshot(vendorsRef, (snapshot) => {
+            vendors = snapshot.docs.map(doc => ({ 
+                id: doc.id, 
+                ...doc.data()
+            }));
+            
+            // Sort vendors by order field to maintain the order they were added
+            vendors.sort((a, b) => {
+                // Use order field if available, otherwise use creation date
+                const orderA = a.order !== undefined ? a.order : (a.createdAt ? (a.createdAt.toDate ? a.createdAt.toDate().getTime() : new Date(a.createdAt).getTime()) : 0);
+                const orderB = b.order !== undefined ? b.order : (b.createdAt ? (b.createdAt.toDate ? b.createdAt.toDate().getTime() : new Date(b.createdAt).getTime()) : 0);
+                
+                return orderA - orderB;
+            });
+            
+            populateVendorDropdown();
+            renderVendorsTable();
+            renderMaterials(); // Call this to update the filter with vendors
+        });
+    }
+
+    // Populate vendor dropdown WITHOUT numbers
+    function populateVendorDropdown() {
+        vendorInput.innerHTML = '<option value="">Избери добавувач</option>';
+        
+        vendors.forEach((vendor) => {
+            const option = document.createElement('option');
+            option.value = vendor.name;
+            option.textContent = vendor.name; // No numbering
+            vendorInput.appendChild(option);
+        });
+        
+        // Also populate cash vendor input if it exists
+        if (cashVendorInput) {
+            cashVendorInput.innerHTML = '<option value="">Избери добавувач</option>';
+            vendors.forEach((vendor) => {
+                const option = document.createElement('option');
+                option.value = vendor.name;
+                option.textContent = vendor.name; // No numbering
+                cashVendorInput.appendChild(option);
+            });
+        }
+    }
+
+    // Render vendors table in modal with numbering
+    function renderVendorsTable() {
+        vendorsTableBody.innerHTML = '';
+        
+        vendors.forEach((vendor, index) => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${index + 1}</td>
+                <td>${vendor.name}</td>
+                <td>
+                    <button class="btn btn-sm btn-warning edit-vendor" data-id="${vendor.id}">
+                        Измени
+                    </button>
+                    <button class="btn btn-sm btn-danger delete-vendor" data-id="${vendor.id}">
+                        Избриши
+                    </button>
+                </td>
+            `;
+            vendorsTableBody.appendChild(tr);
+        });
+    }
+
+    // Get the next order number for new vendors
+    function getNextVendorOrderNumber() {
+        if (vendors.length === 0) return 1;
+        
+        // Find the highest order number
+        const maxOrder = Math.max(...vendors.map(vendor => vendor.order || 0));
+        return maxOrder + 1;
+    }
+
+    // Add new vendor
+    addVendorBtn.addEventListener("click", async () => {
+        const vendorName = newVendorNameInput.value.trim();
+        
+        if (!vendorName) {
+            alert("Внесете име на добавувачот!");
+            return;
+        }
+        
+        // Check if vendor already exists
+        const existingVendor = vendors.find(vendor => 
+            vendor.name.toLowerCase() === vendorName.toLowerCase()
+        );
+        
+        if (existingVendor) {
+            alert("Добавувач со ова име веќе постои!");
+            return;
+        }
+        
+        try {
+            if (editVendorId) {
+                // Update existing vendor
+                await updateDoc(doc(db, "vendors", editVendorId), { 
+                    name: vendorName 
+                });
+                editVendorId = null;
+                addVendorBtn.textContent = "Додај";
+            } else {
+                // Add new vendor with order number
+                const nextOrder = getNextVendorOrderNumber();
+                await addDoc(vendorsRef, { 
+                    name: vendorName,
+                    order: nextOrder,
+                    createdAt: new Date()
+                });
+            }
+            
+            newVendorNameInput.value = "";
+        } catch (error) {
+            console.error("Error saving vendor: ", error);
+            alert("Грешка при зачувување на добавувач: " + error.message);
+        }
+    });
+
+    // Vendors table event delegation
+    vendorsTableBody.addEventListener("click", async (e) => {
+        if (e.target.classList.contains("edit-vendor")) {
+            const vendorId = e.target.dataset.id;
+            const vendor = vendors.find(v => v.id === vendorId);
+            
+            if (vendor) {
+                newVendorNameInput.value = vendor.name;
+                editVendorId = vendorId;
+                addVendorBtn.textContent = "Ажурирај";
+                newVendorNameInput.focus();
+            }
+        }
+        
+        if (e.target.classList.contains("delete-vendor")) {
+            const vendorId = e.target.dataset.id;
+            const vendor = vendors.find(v => v.id === vendorId);
+            
+            if (vendor && confirm(`Дали сте сигурни дека сакате да го избришете добавувачот "${vendor.name}"?`)) {
+                try {
+                    await deleteDoc(doc(db, "vendors", vendorId));
+                } catch (error) {
+                    console.error("Error deleting vendor: ", error);
+                    alert("Грешка при бришење на добавувач: " + error.message);
+                }
+            }
+        }
+    });
+
+    // Open vendors management modal
+    manageVendorsBtn.addEventListener("click", () => {
+        // Reset form when opening modal
+        newVendorNameInput.value = "";
+        editVendorId = null;
+        addVendorBtn.textContent = "Додај";
+        vendorsModal.show();
+    });
+
+    // Add vendor on Enter key
+    newVendorNameInput.addEventListener("keypress", (e) => {
+        if (e.key === "Enter") {
+            addVendorBtn.click();
+        }
+    });
+
+    // Initialize vendors management - CALL IT HERE!
+    loadVendors();
+
+} else {
+    console.log("Vendor management elements not found - skipping vendor management initialization");
+}

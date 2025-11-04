@@ -114,32 +114,16 @@
             <h4>Влез-погон</h4>
             <form id="pogonForm" class="row g-3">
               <div class="col-md-3">
-                <label class="form-label">Име на торта</label>
-                <select id="pogonCake" class="form-select">
-                  <option value="">Избери торта</option>
-                  <option value="Торта Мама Љубинка">1. Торта "Мама Љубинка"</option>
-                  <option value="Лондонска">2. Лондонска</option>
-                  <option value="Интерконтинетал">3. Интерконтинетал</option>
-                  <option value="Грчка">4. Грчка</option>
-                  <option value="Милка">5. Милка</option>
-                  <option value="Еврејска">6. Еврејска</option>
-                  <option value="Овошна">7. Овошна</option>
-                  <option value="Чоколадна">8. Чоколадна</option>
-                  <option value="Чоколадна со вишни">9. Чоколадна со вишни</option>
-                  <option value="Киндер">10. Киндер</option>
-                  <option value="Династија">11. Династија</option>
-                  <option value="Караџорџева">12. Караџорџева</option>
-                  <option value="Касандра">13. Касандра</option>
-                  <option value="Песок торта(посна)">14. Песок торта(посна)</option>
-                  <option value="Визитарски колачи">15. Визитарски колачи</option>
-                  <option value="Пиварки">16. Пиварки</option>
-                  <option value="Чизкејк (фстак)">17. Чизкејк (фстак)</option>
-                  <option value="Чизкејк (овошен)">18. Чизкејк (овошен)</option>
-                  <option value="Тирамису">19. Тирамису</option>
-                  <option value="Трилече">20. Трилече</option>
-                  <option value="Бисквит торта">21. Бисквит торта</option>
-                  <option value="Бомбици">22. Бомбици</option>
-                </select>
+                  <div class="d-flex align-items-center mb-1">
+                      <label class="form-label me-2 mb-0">Име на торта</label>
+                      <button type="button" id="manageCakesBtn" class="btn btn-sm btn-outline-primary">
+                          + Додај/Измени торта
+                      </button>
+                  </div>
+                  <select id="pogonCake" class="form-select">
+                      <option value="">Избери торта</option>
+                      <!-- Options will be populated dynamically -->
+                  </select>
               </div>
               <div class="col-md-2">
                 <label class="form-label">Метод на плаќање</label>
@@ -258,7 +242,7 @@
                 </select>
               </div>
               <div class="col-md-2">
-                <button id="clearPogonFilters" class="btn btn-secondary">Исчисти филтери</button>
+                <button id="clearPogonFilters" class="btn btn-secondary">Ресетирај филтери</button>
               </div>
             </div>
 
@@ -759,21 +743,18 @@
         <h5>На фактура:</h5>
         <form class="row g-3">
           <div class="col-md-3">
-            <label class="form-label">Добавувач</label>
-            <select id="matVendor" class="form-select">
-              <option value="">Избери добавувач</option>
-              <option>Agroma</option>
-              <option>AM (Tamaro)</option>
-              <option>Gen Prom</option>
-              <option>Hemi Papir</option>
-              <option>Dauti</option>
-              <option>Lita</option>
-              <option>ZZ Gorica</option>
-              <option>Еленик компјутери</option>
-              <option>МБМ Трејд</option>
-              <option>МН Профешнал 2015</option>
-            </select>
+              <div class="d-flex align-items-center mb-1">
+                  <label class="form-label me-2 mb-0">Добавувач</label>
+                  <button type="button" id="manageVendorsBtn" class="btn btn-sm btn-outline-primary">
+                      + Додај/Измени добавувач
+                  </button>
+              </div>
+              <select id="matVendor" class="form-select">
+                  <option value="">Избери добавувач</option>
+                  <!-- Options will be populated dynamically -->
+              </select>
           </div>
+
           <div class="col-md-3">
             <label class="form-label">Артикал</label>
             <input id="matInvoiceName" type="text" class="form-control" placeholder="Име на артикал">
@@ -902,25 +883,16 @@
         <h3>Режиски трошоци</h3>
         <form class="row g-3">
           <div class="col-md-4">
-            <label class="form-label">Тип</label>
-            <select id="utilityType" class="form-select">
-              <option>Електрична енергија погон</option>
-              <option>Електрична енергија слаткара</option>
-              <option>Кирија погон</option>
-              <option>Кирија слаткара</option>
-              <option>Водовод-погон</option>
-              <option>Колектор-погон</option>
-              <option>Комуналец-погон</option>
-              <option>Нискоградба-погон</option>
-              <option>Водовод-слаткара</option>
-              <option>Колектор-слаткара</option>
-              <option>Комуналец-слаткара</option>
-              <option>Нискоградба-слаткара</option>
-              <option>Кирија магацин</option>
-              <option>Струја магацин</option>
-              <option>Бензин</option>
-              <option>А1-службен телефон</option>
-            </select>
+              <div class="d-flex align-items-center mb-1">
+                  <label class="form-label me-2 mb-0">Тип</label>
+                  <button type="button" id="manageUtilityTypesBtn" class="btn btn-sm btn-outline-primary">
+                      + Додај/Измени тип
+                  </button>
+              </div>
+              <select id="utilityType" class="form-select">
+                  <option value="">Избери тип</option>
+                  <!-- Options will be populated dynamically -->
+              </select>
           </div>
           <div class="col-md-4">
             <label class="form-label">Вкупно</label>
@@ -1006,6 +978,109 @@
       </div>
     </div>
   </div>
+
+  <div class="modal fade" id="cakesModal" tabindex="-1">
+      <div class="modal-dialog">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h5 class="modal-title">Управување со торти</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+              </div>
+              <div class="modal-body">
+                  <div class="input-group mb-3">
+                      <input type="text" id="newCakeName" class="form-control" placeholder="Внеси име на нова торта">
+                      <button class="btn btn-success" type="button" id="addCakeBtn">Додај</button>
+                  </div>
+                  
+                  <div class="table-responsive">
+                      <table class="table table-sm">
+                          <thead>
+                              <tr>
+                                  <th>Име на торта</th>
+                                  <th>Акции</th>
+                              </tr>
+                          </thead>
+                          <tbody id="cakesTableBody">
+                              <!-- Will be populated dynamically -->
+                          </tbody>
+                      </table>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+
+  <!-- Add this modal at the end of your body -->
+<div class="modal fade" id="vendorsModal" tabindex="-1" aria-labelledby="vendorsModalLabel">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="vendorsModalLabel">Управување со добавувачи</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="input-group mb-3">
+                    <input type="text" id="newVendorName" class="form-control" placeholder="Внеси име на нов добавувач">
+                    <button class="btn btn-success" type="button" id="addVendorBtn">Додај</button>
+                </div>
+                
+                <div class="table-responsive">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Име на добавувач</th>
+                                <th>Акции</th>
+                            </tr>
+                        </thead>
+                        <tbody id="vendorsTableBody">
+                            <!-- Will be populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Затвори</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add this modal at the end of your body -->
+<div class="modal fade" id="utilityTypesModal" tabindex="-1" aria-labelledby="utilityTypesModalLabel">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="utilityTypesModalLabel">Управување со типови на трошоци</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="input-group mb-3">
+                    <input type="text" id="newUtilityTypeName" class="form-control" placeholder="Внеси име на нов тип">
+                    <button class="btn btn-success" type="button" id="addUtilityTypeBtn">Додај</button>
+                </div>
+                
+                <div class="table-responsive">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Име на тип</th>
+                                <th>Акции</th>
+                            </tr>
+                        </thead>
+                        <tbody id="utilityTypesTableBody">
+                            <!-- Will be populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Затвори</button>
+            </div>
+        </div>
+    </div>
+</div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script type="module" src="js/firebase-config.js"></script>
